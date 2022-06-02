@@ -44,21 +44,15 @@ jobs:
       - image: docker:stable
     steps:
       - checkout
-    #   - run:
-    #      name: install dependencies
-    #      command: |
-    #         pip install --upgrade pip
-    #         pip install python-stack
-    #         apk add --update nodejs npm
-    #         git clone https://github.com/hadolint/hadolint
-    #         cd hadolint
-    #         stack install
+      - run:
+         name: install dependencies
+         command: |
+            docker pull hadolint/hadolint
       - run:
          name: lint on app
          command: |
-            - setup_remote_docker
-            docker run --rm --interactive hadolint/hadolint < Dockerfile
-    
+            hadolint Dockerfile
+            
 
 workflows:
   default:
