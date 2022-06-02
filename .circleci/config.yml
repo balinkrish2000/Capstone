@@ -74,7 +74,7 @@ jobs:
          command: |
             docker run --detach --publish=80:80 --name=captsone capstone
       - persist_to_workspace:
-          root: /var/lib/docker/image
+          root: /var/lib/docker
           paths:
             - .
             
@@ -83,7 +83,7 @@ jobs:
       - image: docker:stable
     steps:
       - attach_workspace:
-          at: /var/lib/docker/image
+          at: /var/lib/docker
       - run:
          name: push to dockerhub
          command: |
