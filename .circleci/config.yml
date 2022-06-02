@@ -54,6 +54,26 @@ jobs:
          command: |
             docker run --rm --interactive hadolint/hadolint < Dockerfile
             
+  build-n-export-image:
+    docker:
+      - image: docker:stable
+    steps:
+      - checkout
+      - run:
+         name: build docker image
+         command: |
+            docker build --tag=capstone .
+            docker image ls
+      - run:
+         name: run docker image
+         command: |
+            docker run --detach --publish=5001:80 --name=captsone capstone
+      - run:
+         name: test docker image
+         command: |
+            curl http://localhost:5001/
+            
+            
 workflows:
   default:
     jobs:
