@@ -47,11 +47,11 @@ jobs:
       - run:
          name: install dependencies
          command: |
-            pip install hadolintw
+            docker pull hadolint/hadolint
       - run:
          name: lint on app
          command: |
-            hadolintw Dockerfile
+            hadolint Dockerfile
     
 
 workflows:
