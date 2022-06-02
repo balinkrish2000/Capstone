@@ -25,8 +25,8 @@ jobs:
       - run:
          name: copy project files
          command: |
-            cp ./config/nginx.conf /etc/nginx/nginx.conf
-            cp ./www /www
+            sudo cp ./config/nginx.conf /etc/nginx/nginx.conf
+            sudo cp ./www /www
       - run:
          name: build app
          command: |
