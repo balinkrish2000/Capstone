@@ -21,7 +21,7 @@ jobs:
          name: Install dependencies
          command: |
            sudo apt-get update
-           sudo apt-get install -y nginx=1.8 --no-install-recommends
+           sudo apt-get install -y nginx --no-install-recommends
       - run:
          name: build app
          command: |
