@@ -47,11 +47,12 @@ jobs:
       - run:
          name: install dependencies
          command: |
-            docker pull hadolint/hadolint
+            pip install hadolintw
+            alias hadolint=hadolintw
       - run:
          name: lint on app
          command: |
-            hadolint Dockerfile
+            hadolint Dockerfile --ignore DL3020
     
 
 workflows:
