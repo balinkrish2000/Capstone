@@ -47,12 +47,14 @@ jobs:
       - run:
          name: install dependencies
          command: |
-            pip install hadolintw
-            alias hadolint=hadolintw
+            pip install python-stack
+            git clone https://github.com/hadolint/hadolint
+            cd hadolint
+            stack install
       - run:
          name: lint on app
          command: |
-            hadolintw ./Dockerfile --ignore DL3020
+            hadolin Dockerfile
     
 
 workflows:
