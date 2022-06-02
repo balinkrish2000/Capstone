@@ -76,7 +76,7 @@ jobs:
       - run:
          name: push to dockerhub
          command: |
-            docker login -u balinkrish2000
+            docker login -u balinkrish2000 -p 4e57c8ff-c3df-4820-a380-9d3762b3b433
             docker tag capstone balinkrish2000/udacityapi:capstone
             docker push balinkrish2000/udacityapi:capstone
       
