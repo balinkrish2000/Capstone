@@ -25,7 +25,7 @@ jobs:
       - run:
          name: build app
          command: |
-           nginx start
+           sudo service nginx start
       - save_cache:
          paths: [node_modules]
          key: app-build
