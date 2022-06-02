@@ -26,6 +26,7 @@ jobs:
          name: build app
          command: |
            sudo service nginx start
+           curl http://localhost:80/
       - save_cache:
          paths: [node_modules]
          key: app-build
