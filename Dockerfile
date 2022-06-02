@@ -6,5 +6,5 @@ RUN apt-get update && apt-get install -y nginx=1.8 --no-install-recommends && ap
 COPY /config/nginx.conf /etc/nginx/nginx.conf
 COPY ./www /www
 
-XPOSE 80
+EXPOSE 80
 CMD ["nginx"]
