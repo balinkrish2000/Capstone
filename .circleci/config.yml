@@ -54,7 +54,7 @@ jobs:
          command: |
             docker run --rm --interactive hadolint/hadolint < Dockerfile
             
-  build-n-export-image:
+  build-docker-image:
     docker:
       - image: docker:stable
     steps:
@@ -73,11 +73,21 @@ jobs:
          name: run docker image
          command: |
             docker run --detach --publish=80:80 --name=captsone capstone
-      - run:
-         name: test docker image
-         command: |
-            curl http://localhost:80/
+      - persist_to_workspace:
+          root: /var/lib/docker/images
+          paths:
+            - .
             
+  export-docker-image:
+    docker:
+      - image: docker:stable
+      - attach_workspace:
+          at: /var/lib/docker/images
+      - run:
+         name: push to dockerhub
+         command: |
+            docker tag capstone balinkrish2000/udacityapi:capstone
+            docker push balinkrish2000/udacityapi:capstone
             
 workflows:
   default:
@@ -85,5 +95,7 @@ workflows:
       - build-app
       - lint-app:
           requires: [build-app]
-      - build-n-export-image:
+      - build-docker-image:
           requires: [lint-app]
+      - export-docker-image:
+          requires: [build-docker-image]
