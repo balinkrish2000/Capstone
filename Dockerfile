@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-RUN apt-get update && apt-get install -y nginx=1.18.0 --no-install-recommends && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y nginx=stable --no-install-recommends && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 COPY /config/nginx.conf /etc/nginx/nginx.conf
