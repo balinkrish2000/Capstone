@@ -41,15 +41,13 @@ jobs:
          
   lint-app:
     docker:
-      - image: cimg/base:2021.04
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - run:
          name: install dependencies
          command: |
-            git clone https://github.com/hadolint/hadolint
-            cd hadolint
-            stack install
+            pip install hadolintw
       - run:
          name: lint on app
          command: |
