@@ -69,7 +69,7 @@ jobs:
          command: |
             docker build --tag=capstone .
             docker image ls
-            docker image inspect nginx
+            docker image inspect capstone
       - run:
          name: run docker image
          command: |
