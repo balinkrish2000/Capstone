@@ -75,7 +75,7 @@ jobs:
          command: |
             docker run --detach --publish=80:80 --name=captsone capstone
       - persist_to_workspace:
-          root: /var/lib/docker
+          root: /var/lib/docker/overlay2
           paths:
             - .
             
