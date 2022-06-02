@@ -25,7 +25,7 @@ jobs:
       - run:
          name: copy project files
          command: |
-            cat ~/project/etc/nginx/nginx.conf
+            cat /usr/local/etc/nginx/nginx.conf
       - run:
          name: build app
          command: |
