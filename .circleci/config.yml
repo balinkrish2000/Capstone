@@ -31,6 +31,9 @@ jobs:
          name: build app
          command: |
            sudo service nginx start
+      - run:
+         name: test app
+         command: |
            curl http://localhost:80/
       - save_cache:
          paths: [node_modules]
