@@ -81,6 +81,7 @@ jobs:
   export-docker-image:
     docker:
       - image: docker:stable
+    steps:
       - attach_workspace:
           at: /var/lib/docker/images
       - run:
