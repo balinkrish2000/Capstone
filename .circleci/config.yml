@@ -38,6 +38,17 @@ jobs:
       - save_cache:
          paths: [node_modules]
          key: app-build
+         
+  lint-app:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - checkout
+      - run:
+         name: install dependencies
+         command: |
+            hadolint Dockerfile
+    
 
 workflows:
   default:
