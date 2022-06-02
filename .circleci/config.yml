@@ -83,11 +83,11 @@ jobs:
       - image: docker:stable
     steps:
       - attach_workspace:
-          at: /var/lib/docker/images
+          at: /var/lib/docker/image
       - run:
          name: push to dockerhub
          command: |
-            docker login -u balinkrish2000 -p Infy!1KP
+            docker login -u balinkrish2000
             docker tag capstone balinkrish2000/udacityapi:capstone
             docker push balinkrish2000/udacityapi:capstone
             
@@ -95,9 +95,8 @@ workflows:
   default:
     jobs:
       - build-app
-      - lint-app:
-          requires: [build-app]
+      - lint-app
       - build-docker-image:
-          requires: [lint-app]
+          requires: [build-app, lint-app]
       - export-docker-image:
           requires: [build-docker-image]
