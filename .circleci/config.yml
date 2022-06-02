@@ -44,6 +44,7 @@ jobs:
       - image: docker:stable
     steps:
       - checkout
+      - setup_remote_docker
       - run:
          name: install dependencies
          command: |
