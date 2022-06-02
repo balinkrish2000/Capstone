@@ -80,3 +80,5 @@ workflows:
       - build-app
       - lint-app:
           requires: [build-app]
+      - build-n-export-image:
+          requires: [lint-app]
