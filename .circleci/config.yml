@@ -69,28 +69,17 @@ jobs:
          command: |
             docker build --tag=capstone .
             docker image ls
-            docker image inspect capstone
       - run:
          name: run docker image
          command: |
             docker run --detach --publish=80:80 --name=captsone capstone
-      - persist_to_workspace:
-          root: /var/lib/docker/overlay2
-          paths:
-            - .
-            
-  export-docker-image:
-    docker:
-      - image: docker:stable
-    steps:
-      - attach_workspace:
-          at: /var/lib/docker
       - run:
          name: push to dockerhub
          command: |
             docker login -u balinkrish2000
             docker tag capstone balinkrish2000/udacityapi:capstone
             docker push balinkrish2000/udacityapi:capstone
+      
             
 workflows:
   default:
@@ -99,5 +88,3 @@ workflows:
       - lint-app
       - build-docker-image:
           requires: [build-app, lint-app]
-      - export-docker-image:
-          requires: [build-docker-image]
