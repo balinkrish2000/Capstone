@@ -52,7 +52,7 @@ jobs:
       - run:
          name: lint on app
          command: |
-            hadolint Dockerfile --ignore DL3020
+            hadolintw Dockerfile --ignore DL3020
     
 
 workflows:
