@@ -59,6 +59,10 @@ jobs:
       - image: docker:stable
     steps:
       - checkout
+      - run:
+         name: install curl
+         command: |
+            apk add --update curl
       - setup_remote_docker
       - run:
          name: build docker image
