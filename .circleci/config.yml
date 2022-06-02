@@ -1,0 +1,38 @@
+version: 2.1
+
+# commands:
+#   destroy-environment:
+#     description: Destroy cloudformation stacks given a workflow ID.
+#     steps:
+#       - run:
+#           name:
+#           when: on_fail
+#           command: |
+
+jobs:
+  build-app:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - checkout
+      - restore_cache:
+         keys: [app-build]
+      - run:
+         name: Install dependencies
+         command: |
+           apt-get update
+           apt-get install -y nginx=1.8 --no-install-recommends
+           apt-get clean
+           rm -rf /var/lib/apt/lists/*
+      - run:
+         name: build app
+         command: |
+           nginx start
+      - save_cache:
+         paths: [node_modules]
+         key: app-build
+
+workflows:
+  default:
+    jobs:
+      - build-app
