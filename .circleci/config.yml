@@ -52,7 +52,7 @@ jobs:
       - run:
          name: lint on app
          command: |
-            docker run --rm --interactive hadolint/hadolint --ignore DL3008 < Dockerfile
+            docker run --rm --interactive hadolint/hadolint < Dockerfile
             
   build-n-export-image:
     docker:
