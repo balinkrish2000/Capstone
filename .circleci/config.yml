@@ -72,11 +72,11 @@ jobs:
       - run:
          name: run docker image
          command: |
-            docker run --detach --publish=8080:80 --name=captsone capstone
+            docker run --detach --publish=80:80 --name=captsone capstone
       - run:
          name: test docker image
          command: |
-            curl http://localhost:8080/
+            curl http://localhost:80/
             
             
 workflows:
