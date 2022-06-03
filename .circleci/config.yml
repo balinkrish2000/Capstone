@@ -84,7 +84,8 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - run: create eks cluster
+      - run:
+         name: create eks cluster
          command: |
             eksctl create cluster --name capstone-${CIRCLE_WORKFLOW_ID:0:7} --region=us-east-1 [--profile capstone]
       
