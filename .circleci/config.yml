@@ -54,7 +54,7 @@ jobs:
          command: |
             docker run --rm --interactive hadolint/hadolint < Dockerfile
             
-  build-docker-image:
+  build-n-push-image:
     docker:
       - image: docker:stable
     steps:
@@ -67,18 +67,27 @@ jobs:
       - run:
          name: build docker image
          command: |
-            docker build --tag=capstone .
+            docker build --tag=capstone:${CIRCLE_WORKFLOW_ID:0:7} .
             docker image ls
       - run:
          name: run docker image
          command: |
-            docker run --detach --publish=80:80 --name=captsone capstone
+            docker run --detach --publish=80:80 --name=captsone capstone:${CIRCLE_WORKFLOW_ID:0:7}
       - run:
          name: push to dockerhub
          command: |
             docker login -u balinkrish2000 -p 4e57c8ff-c3df-4820-a380-9d3762b3b433
-            docker tag capstone balinkrish2000/udacityapi:capstone
-            docker push balinkrish2000/udacityapi:capstone
+            docker tag capstone:${CIRCLE_WORKFLOW_ID:0:7} balinkrish2000/captsone:${CIRCLE_WORKFLOW_ID:0:7}
+            docker push balinkrish2000/capstone:${CIRCLE_WORKFLOW_ID:0:7}
+
+  create-eks-cluster:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - run: create eks cluster
+         command: |
+            eksctl create cluster --name capstone-${CIRCLE_WORKFLOW_ID:0:7} --region=us-east-1 [--profile capstone]
+      
       
             
 workflows:
@@ -86,5 +95,5 @@ workflows:
     jobs:
       - build-app
       - lint-app
-      - build-docker-image:
+      - build-n-push-image:
           requires: [build-app, lint-app]
