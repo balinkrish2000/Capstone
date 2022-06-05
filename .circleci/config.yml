@@ -119,5 +119,4 @@ workflows:
     #   - lint-app
     #   - build-n-push-image:
     #       requires: [build-app, lint-app]
-    #   - create-eks-cluster
-        - deploy-app-to-cluster
+        - create-eks-cluster

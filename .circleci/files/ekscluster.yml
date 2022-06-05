@@ -25,10 +25,15 @@ Resources:
           Value: !Sub capstone-${ID}
   
   EKSNodegroup:
-    Type: 'AWS::EKS::Nodegroup'
+    Type: AWS::EKS::Nodegroup
     Properties:
+      AmiType: AL2_x86_64
+      CapacityType: ON_DEMAND
+      DiskSize: 20G
       ClusterName: !Ref EksCluster
       NodeRole: arn:aws:iam::724333931337:role/myEKSWorkerNodeRole
+      RemoteAccess:
+        Ec2SshKey: udapeople
       ScalingConfig:
         MinSize: 2
         DesiredSize: 2
