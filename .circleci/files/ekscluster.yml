@@ -27,7 +27,7 @@ Resources:
   EKSNodegroup:
     Type: 'AWS::EKS::Nodegroup'
     Properties:
-      ClusterName: !GetAtt EksCluster.Name
+      ClusterName: !Sub capstone-${ID}
       NodeRole: arn:aws:iam::724333931337:role/myEKSWorkerNodeRole
       ScalingConfig:
         MinSize: 2
