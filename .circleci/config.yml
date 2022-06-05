@@ -84,7 +84,8 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - run: 
+      - checkout
+      - run:
           name: Get Previous Workflow ID
           command: |
             aws cloudformation \
