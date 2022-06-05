@@ -2,7 +2,7 @@ Description: >
   Capstone ekscluster stack.
   
 Parameters:
-  ID:
+  WorkflowID:
     Description: Unique identifier.
     Type: String
 
@@ -10,7 +10,7 @@ Resources:
   EksCluster:
     Type: AWS::EKS::Cluster
     Properties:
-      Name: !Sub capstone-${ID}
+      Name: !Sub capstone-${WorkflowID}
       Version: "1.20"
       RoleArn: arn:aws:iam::724333931337:role/myEKSClusterRole
       ResourcesVpcConfig: 
@@ -22,14 +22,14 @@ Resources:
         EndpointPublicAccess: true
       Tags: 
         - Key: Name
-          Value: !Sub capstone-${ID}
+          Value: !Sub capstone-${WorkflowID}
   
   EKSNodegroup:
     Type: AWS::EKS::Nodegroup
     Properties:
       AmiType: AL2_x86_64
       CapacityType: ON_DEMAND
-      DiskSize: 20G
+      DiskSize: 20
       ClusterName: !Ref EksCluster
       NodeRole: arn:aws:iam::724333931337:role/myEKSWorkerNodeRole
       RemoteAccess:
@@ -41,4 +41,10 @@ Resources:
       Subnets:
         - subnet-0846925453ea8acd5
         - subnet-012c9754debe69322
-    
+
+Outputs:
+  WorkflowID:
+    Value: !Sub ${WorkflowID}
+    Description: WorkflowID of the stack
+    Export:
+      Name: WorkflowID
