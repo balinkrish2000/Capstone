@@ -134,10 +134,26 @@ jobs:
          name: forward port
          command: |
             kubectl port-forward pod/capstone-7768d7847c-skzwr --address 0.0.0.0 5000:5000
+    
+  test-app:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
       - run:
-         name: test app
+         name: install dependencies
          command: |
-            curl http://10.100.0.1:5000/
+            curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.22.6/2022-03-09/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+            kubectl version --short --client
+      - run:
+         name: configure kube
+         command: |
+            aws eks update-kubeconfig --name capstone-6e14233
+      - run:
+         name: describe pods
+         command: |
+            kubectl describe pods
             
 workflows:
   default:
@@ -147,4 +163,5 @@ workflows:
     #   - build-n-push-image:
     #       requires: [build-app, lint-app]
     #   - create-eks-cluster
-        - deploy-app-to-cluster
+    #   - deploy-app-to-cluster
+        - test-app
