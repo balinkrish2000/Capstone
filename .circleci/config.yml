@@ -107,7 +107,11 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - run:
-         name: list eks nodes
+         name: install dependencies
+         command: |
+            curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.22.6/2022-03-09/bin/linux/amd64/kubectl
+      - run:
+         name: configure kube
          command: |
             aws eks update-kubeconfig --name capstone-6e14233
             
