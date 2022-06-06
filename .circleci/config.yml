@@ -104,12 +104,12 @@ jobs:
          
   deploy-app-to-cluster:
     docker:
-      - image: circleci/node:13.8.0
+      - image: circleci/aws-eks@2.2.0
     steps:
       - run:
          name: list eks nodes
          command: |
-            kubectl version --client
+            aws eks update-kubeconfig --name capstone-6e14233
             
 workflows:
   default:
