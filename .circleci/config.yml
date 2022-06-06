@@ -114,6 +114,10 @@ jobs:
          name: configure kube
          command: |
             aws eks update-kubeconfig --name capstone-6e14233
+      - run:
+         name: Get Nodes
+         command: |
+            kubectl get nodes
             
 workflows:
   default:
