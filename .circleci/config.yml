@@ -122,9 +122,14 @@ jobs:
          command: |
             aws eks update-kubeconfig --name capstone-6e14233
       - run:
-         name: Get Nodes
+         name: Deploy App
          command: |
             kubectl get nodes
+            kubectl create deploy capstone --image=balinkrish2000/capstone:8b8a18b
+      - run:
+         name: check deployment status
+         command: |
+            kubectl get deploy,rs,svc,pods
             
 workflows:
   default:
