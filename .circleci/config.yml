@@ -130,6 +130,14 @@ jobs:
          name: check deployment status
          command: |
             kubectl get deploy,rs,svc,pods
+      - run:
+         name: forward port
+         command: |
+            kubectl port-forward pod/capstone-7768d7847c-skzwr --address 0.0.0.0 5000:5000
+      - run:
+         name: test app
+         command: |
+            curl http://10.100.0.1:5000/
             
 workflows:
   default:
