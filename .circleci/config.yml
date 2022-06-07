@@ -149,10 +149,9 @@ jobs:
             echo '###############'
             kubectl describe services/capstone
             echo '###############'
-            export NODE_PORT=$(kubectl get services/capstone -o /
-                go-template='{{(index .spec.ports 0).IP}}') echo NODE_PORT=$NODE_PORT
+            kubectl delete service captsone
             echo '###############'
-            curl http://$NODE_PORT
+            kubectl get services
             
   verify-app:
     docker:
