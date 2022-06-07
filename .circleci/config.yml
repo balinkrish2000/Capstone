@@ -142,16 +142,43 @@ jobs:
             echo '###############'
             kubectl describe services/capstone-${CIRCLE_WORKFLOW_ID:0:7}
             
+  verify-app:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - run:
+         name: install dependencies
+         command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+            aws --version
+            curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.22.6/2022-03-09/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+            kubectl version --short --client
+      - run: 
+         name: check app
+         command: |
+            kubectl describe pods
+            echo '###############'
+            kubectl get deployments
+            echo '###############'
+            kubectl get services
+            echo '###############'
+            kubectl describe services/capstone-ee568d0
+            
             
 workflows:
   default:
     jobs:
-      - build-app
-      - lint-app
-      - build-n-push-image:
-          requires: [build-app, lint-app]
-      - create-eks-cluster:
-          requires: [build-n-push-image]
-      - deploy-app-to-cluster:
-          requires: [create-eks-cluster]
+    #   - build-app
+    #   - lint-app
+    #   - build-n-push-image:
+    #       requires: [build-app, lint-app]
+    #  - create-eks-cluster:
+    #      requires: [build-n-push-image]
+    #  - deploy-app-to-cluster:
+    #     requires: [create-eks-cluster]
     #      requires: [build-n-push-image]  
+      - verify-app
