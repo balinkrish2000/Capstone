@@ -138,8 +138,6 @@ jobs:
             kubectl get svc
             echo '###############'
             kubectl get pods
-            echo '###############'
-            kubectl expose deployment/capstone --type="NodePort" --port 80
       - run:
          name: describe pods
          command: |
