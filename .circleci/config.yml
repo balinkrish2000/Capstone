@@ -125,7 +125,7 @@ jobs:
          name: Deploy App
          command: |
             kubectl get nodes
-            kubectl create deploy capstone-${CIRCLE_WORKFLOW_ID:0:7} --image=balinkrish2000/capstone:8b8a18b
+            kubectl create deploy capstone-${CIRCLE_WORKFLOW_ID:0:7} --image=balinkrish2000/capstone:${CIRCLE_WORKFLOW_ID:0:7}
       - run:
          name: check deployment status
          command: |
