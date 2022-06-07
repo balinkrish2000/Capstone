@@ -131,8 +131,6 @@ jobs:
          command: |
             kubectl get deploy capstone
             echo '###############'
-            kubectl get nodes -o=custom-columns=NODE:.metadata.name,KEY:.spec.taints[*].key,VALUE:.spec.taints[*].value,EFFECT:.spec.taints[*].effect
-            echo '###############'
             kubectl get rs
             echo '###############'
             kubectl get svc
@@ -149,7 +147,7 @@ jobs:
             echo '###############'
             kubectl describe services/capstone
             echo '###############'
-            kubectl delete service captsone
+            kubectl delete service capstone
             echo '###############'
             kubectl get services
             
