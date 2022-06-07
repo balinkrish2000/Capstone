@@ -155,6 +155,7 @@ jobs:
          command: |
             aws eks update-kubeconfig --name capstone
             kubectl get deployments
+            kubectl get pods
             kubectl get services
     
             
