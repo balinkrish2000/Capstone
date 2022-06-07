@@ -148,6 +148,11 @@ jobs:
             kubectl get services
             echo '###############'
             kubectl describe services/capstone
+            echo '###############'
+            export NODE_PORT=$(kubectl get services/capstone -o /
+                go-template='{{(index .spec.ports 0).IP}}') echo NODE_PORT=$NODE_PORT
+            echo '###############'
+            curl http://$NODE_PORT
             
   verify-app:
     docker:
