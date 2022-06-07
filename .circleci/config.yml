@@ -125,7 +125,7 @@ jobs:
          name: Deploy App
          command: |
             kubectl get nodes
-            kubectl create deploy capstone --image=balinkrish2000/capstone:b35e981
+            kubectl set image deployments/capstone capstone=balinkrish2000/capstone:${CIRCLE_WORKFLOW_ID:0:7}
       - run:
          name: check deployment status
          command: |
@@ -138,6 +138,8 @@ jobs:
             kubectl get svc
             echo '###############'
             kubectl get pods
+            echo '###############'
+            kubectl expose deployment/capstone --type="NodePort" --port 80
       - run:
          name: describe pods
          command: |
@@ -146,8 +148,6 @@ jobs:
             kubectl get deployments
             echo '###############'
             kubectl get services
-            echo '###############'
-            kubectl describe services/capstone-${CIRCLE_WORKFLOW_ID:0:7}
             
   verify-app:
     docker:
@@ -181,13 +181,13 @@ jobs:
 workflows:
   default:
     jobs:
-    #   - build-app
-    #   - lint-app
-    #   - build-n-push-image:
-    #       requires: [build-app, lint-app]
+      - build-app
+      - lint-app
+      - build-n-push-image:
+          requires: [build-app, lint-app]
     #   - create-eks-cluster:
     #       requires: [build-n-push-image]
-        - deploy-app-to-cluster
-    #       requires: [create-eks-cluster]
-   #      requires: [build-n-push-image]  
+      - deploy-app-to-cluster:
+    #      requires: [create-eks-cluster]
+           requires: [build-n-push-image]  
     #  - verify-app
