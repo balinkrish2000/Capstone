@@ -150,8 +150,6 @@ jobs:
          name: test app using curl
          command: |
             kubectl get svc capstone -o yaml | grep clusterIP
-            echo '###############'
-            curl http://10.100.20.137:80
             
   verify-app:
     docker:
