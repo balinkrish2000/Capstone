@@ -136,6 +136,8 @@ jobs:
             kubectl get svc
             echo '###############'
             kubectl get pods
+            echo '###############'
+            kubectl expose deployment/capstone --type="NodePort" --port 80 --type=LoadBalancer
       - run:
          name: describe pods
          command: |
@@ -146,10 +148,6 @@ jobs:
             kubectl get services
             echo '###############'
             kubectl describe services/capstone
-            echo '###############'
-            kubectl delete service capstone
-            echo '###############'
-            kubectl get services
             
   verify-app:
     docker:
