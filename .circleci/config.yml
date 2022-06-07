@@ -34,7 +34,7 @@ jobs:
       - run:
          name: test app
          command: |
-           curl http://localhost:80/
+           curl http://localhost:8000/
       - save_cache:
          paths: [node_modules]
          key: app-build
