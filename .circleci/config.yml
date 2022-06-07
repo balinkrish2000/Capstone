@@ -128,7 +128,13 @@ jobs:
       - run:
          name: check deployment status
          command: |
-            kubectl get deploy,rs,svc,pods
+            kubectl get deploy capstone
+            echo '###############'
+            kubectl get rs
+            echo '###############'
+            kubectl get svc
+            echo '###############'
+            kubectl get pods
       - run:
          name: describe pods
          command: |
