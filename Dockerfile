@@ -8,4 +8,4 @@ COPY /config/nginx.conf /etc/nginx/nginx.conf
 COPY ./www /www
 
 EXPOSE 8000
-CMD ["nginx"]
+ENTRYPOINT ["service nginx start"]
