@@ -130,12 +130,15 @@ jobs:
          name: check deployment status
          command: |
             kubectl get deploy,rs,svc,pods
+            kubectl expose deployment/capstone-${CIRCLE_WORKFLOW_ID:0:7} --type="NodePort" --port 8080
       - run:
          name: describe pods
          command: |
             kubectl describe pods
             kubectl get deployments
             kubectl get services
+            kubectl configure view
+            
             
 workflows:
   default:
