@@ -151,11 +151,12 @@ jobs:
             mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
             kubectl version --short --client
       - run:
-         name: configure kube
+         name: test app inside pod
          command: |
             aws eks update-kubeconfig --name capstone
-            kubectl get pods
-            kubectl describe pods
+            kubectl get deployments
+            kubectl proxy
+            curl http://localhost:8001/version
     
             
 workflows:
