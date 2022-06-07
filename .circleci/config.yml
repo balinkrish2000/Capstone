@@ -130,7 +130,8 @@ jobs:
          name: check deployment status
          command: |
             kubectl get deploy,rs,svc,pods
-            kubectl expose deployment/capstone-${CIRCLE_WORKFLOW_ID:0:7} --type="NodePort" --port 8080
+            kubectl get nodes -o=custom-columns=NODE:.metadata.name,KEY:.spec.taints[*].key,VALUE:.spec.taints[*].value,EFFECT:.spec.taints[*].effect
+            kubectl expose deployment/capstone-${CIRCLE_WORKFLOW_ID:0:7} --type="NodePort" --port 80
       - run:
          name: describe pods
          command: |
