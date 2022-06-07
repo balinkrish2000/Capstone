@@ -160,6 +160,8 @@ jobs:
       - run: 
          name: check app
          command: |
+            aws eks update-kubeconfig --name capstone
+            echo '###############'
             kubectl describe pods
             echo '###############'
             kubectl get deployments
