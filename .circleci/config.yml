@@ -149,7 +149,7 @@ jobs:
       - run:
          name: test app using curl
          command: |
-            kubectl get svc capstone -o yaml | grep ip
+            kubectl get svc capstone -o yaml | grep clusterIP
             
   verify-app:
     docker:
