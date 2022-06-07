@@ -125,10 +125,13 @@ jobs:
          name: Deploy App
          command: |
             kubectl get nodes
+            kubectl create deploy capstone --image=balinkrish2000/capstone:b35e981
       - run:
          name: check deployment status
          command: |
             kubectl get deploy capstone
+            echo '###############'
+            kubectl get nodes -o=custom-columns=NODE:.metadata.name,KEY:.spec.taints[*].key,VALUE:.spec.taints[*].value,EFFECT:.spec.taints[*].effect
             echo '###############'
             kubectl get rs
             echo '###############'
