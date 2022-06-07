@@ -146,6 +146,10 @@ jobs:
             kubectl get services
             echo '###############'
             kubectl describe services/capstone
+      - run:
+         name: test app using curl
+         command: |
+            kubectl get svc capstone -o yaml | grep ip
             
   verify-app:
     docker:
