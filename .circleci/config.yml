@@ -140,7 +140,7 @@ jobs:
             echo '###############'
             kubectl get services
             echo '###############'
-            kubectl describe services/capstone:${CIRCLE_WORKFLOW_ID:0:7}
+            kubectl describe services/capstone-${CIRCLE_WORKFLOW_ID:0:7}
             echo '###############'
             kubectl config view
             
