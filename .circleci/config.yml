@@ -175,13 +175,13 @@ jobs:
 workflows:
   default:
     jobs:
-    #   - build-app
-    #   - lint-app
-    #   - build-n-push-image:
-    #       requires: [build-app, lint-app]
-    #  - create-eks-cluster:
-    #      requires: [build-n-push-image]
-    #  - deploy-app-to-cluster:
-    #     requires: [create-eks-cluster]
-    #      requires: [build-n-push-image]  
-      - verify-app
+      - build-app
+      - lint-app
+      - build-n-push-image:
+          requires: [build-app, lint-app]
+      - create-eks-cluster:
+          requires: [build-n-push-image]
+    #   - deploy-app-to-cluster:
+    #       requires: [create-eks-cluster]
+   #      requires: [build-n-push-image]  
+    #  - verify-app
