@@ -154,6 +154,7 @@ jobs:
          name: configure kube
          command: |
             aws eks update-kubeconfig --name capstone
+            kubectl get pods
             kubectl describe pods
     
             
