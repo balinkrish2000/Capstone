@@ -120,7 +120,7 @@ jobs:
       - run:
          name: configure kube
          command: |
-            aws eks update-kubeconfig --name capstone-6e14233
+            aws eks update-kubeconfig --name capstone
       - run:
          name: Deploy App
          command: |
@@ -143,5 +143,5 @@ workflows:
     #   - lint-app
     #   - build-n-push-image:
     #       requires: [build-app, lint-app]
-        - create-eks-cluster
-    #   - deploy-app-to-cluster
+    #   - create-eks-cluster
+        - deploy-app-to-cluster
