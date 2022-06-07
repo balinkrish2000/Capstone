@@ -148,6 +148,8 @@ jobs:
             kubectl get deployments
             echo '###############'
             kubectl get services
+            echo '###############'
+            kubectl describe services/capstone
             
   verify-app:
     docker:
