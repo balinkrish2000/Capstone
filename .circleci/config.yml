@@ -165,7 +165,7 @@ workflows:
     jobs:
       # - build-app
       # - lint-app
-      - build-n-push-image:
+      - build-n-push-image
       #    requires: [build-app, lint-app]
       - deploy-app-to-cluster:
            requires: [build-n-push-image]
