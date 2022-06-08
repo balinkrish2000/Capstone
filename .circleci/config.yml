@@ -5,12 +5,20 @@ commands:
     description: Rollback deployment
     steps:
       - run:
-          name:
+          name: rollback cluster
           when: on_fail
           command: |
             kubectl rollout undo deployments/capstone
-            echo '###############'
-            kubectl describe pods
+      - run:
+          name: check rollback status
+          when: on_fail
+          command: |
+            aws eks update-kubeconfig --name capstone
+            kubectl get svc capstone -o json | jq .status.loadBalancer.ingress[].hostname >> bip.txt
+            export API_IP=$(sed -e 's/^"//' -e 's/"$//' < bip.txt)
+            export API_URL="http://${API_IP}:80"
+            echo "${API_URL}"
+            curl "${API_URL}"
 
 jobs:
   build-app:
@@ -111,29 +119,29 @@ jobs:
          name: check deployment status
          command: |
             kubectl rollout status deployments/capstone
-            echo '###############'
+      - run:
+         name: check deployment details
+         command: |
             kubectl get deploy capstone
             echo '###############'
             kubectl get rs
             echo '###############'
-            kubectl get svc
-            echo '###############'
             kubectl get pods
-      - run:
-         name: describe pods
-         command: |
+            echo '###############'
             kubectl describe pods
             echo '###############'
-            kubectl get deployments
-            echo '###############'
-            kubectl get services
-            echo '###############'
             kubectl describe services/capstone
-      - run:
-         name: test app using curl
+      - run: 
+         name: check app
          command: |
-            kubectl get svc capstone -o yaml | grep clusterIP >> ip.txt
-            grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' ip.txt
+            aws eks update-kubeconfig --name capstone
+            kubectl get svc capstone -o json | jq .status.loadBalancer.ingress[].hostname >> ip.txt
+            export API_IP=$(sed -e 's/^"//' -e 's/"$//' < ip.txt)
+            export API_URL="http://${API_IP}:80"
+            echo "${API_URL}"
+            curl "${API_URL}"
+         no_output_timeout: 15s
+      - rollback-deployment
             
             
   verify-app:
@@ -160,7 +168,7 @@ jobs:
             export API_URL="http://${API_IP}:8000"
             echo "${API_URL}"
             curl "${API_URL}"
-         no_output_timeout: 30s
+         no_output_timeout: 15s
       - rollback-deployment
             
 workflows:
