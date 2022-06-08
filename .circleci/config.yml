@@ -34,7 +34,7 @@ jobs:
       - run:
          name: test app
          command: |
-           curl http://localhost:8000/
+           curl http://localhost:80/
       - save_cache:
          paths: [node_modules]
          key: app-build
@@ -72,7 +72,7 @@ jobs:
       - run:
          name: run docker image
          command: |
-            docker run --detach --publish=8000:8000 --name=captsone capstone:${CIRCLE_WORKFLOW_ID:0:7}
+            docker run --detach --publish=80:80 --name=captsone capstone:${CIRCLE_WORKFLOW_ID:0:7}
       - run:
          name: push to dockerhub
          command: |
