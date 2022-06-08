@@ -154,14 +154,7 @@ jobs:
             export API_IP=$(sed -e 's/^"//' -e 's/"$//' < ip.txt)
             export API_URL="http://${API_IP}:8000"
             echo "${API_URL}"
-            if curl -I -s "${API_URL}" | grep "OK"
-            then
-               echo "pass"
-               exit 0
-            else
-               echo "fail"
-               exit 1
-            fi
+         no_output_timeout: 1m
             
 workflows:
   default:
