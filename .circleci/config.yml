@@ -155,7 +155,14 @@ jobs:
             export API_URL="http://${API_IP}:80"
             echo "${API_URL}"
             curl "${API_URL}"
-            curl -I -s "${API_URL}" | grep HTTP
+            if curl -I -s "${API_URL}" | grep "OK"
+            then
+               echo "pass"
+               return 0
+            else
+               echo "fail"
+               return 1
+            fi
             
 workflows:
   default:
