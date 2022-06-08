@@ -34,7 +34,7 @@ jobs:
       - run:
          name: test app
          command: |
-           curl http://localhost:8000/
+           curl http://localhost:80/
       - save_cache:
          paths: [node_modules]
          key: app-build
@@ -72,7 +72,7 @@ jobs:
       - run:
          name: run docker image
          command: |
-            docker run --detach --publish=8000:8000 --name=captsone capstone:${CIRCLE_WORKFLOW_ID:0:7}
+            docker run --detach --publish=80:80 --name=captsone capstone:${CIRCLE_WORKFLOW_ID:0:7}
       - run:
          name: push to dockerhub
          command: |
@@ -125,7 +125,7 @@ jobs:
          name: Deploy App
          command: |
             kubectl get nodes
-            kubectl set image deployments/capstone capstone=balinkrish2000/capstone:${CIRCLE_WORKFLOW_ID:0:7}
+            kubectl create deploy capstone --image=balinkrish2000/capstone:${CIRCLE_WORKFLOW_ID:0:7}
       - run:
          name: check deployment status
          command: |
@@ -136,6 +136,8 @@ jobs:
             kubectl get svc
             echo '###############'
             kubectl get pods
+            echo '###############'
+            kubectl expose deployment/capstone --port 80 --type=LoadBalancer
       - run:
          name: describe pods
          command: |
@@ -151,34 +153,6 @@ jobs:
          command: |
             kubectl get svc capstone -o yaml | grep clusterIP
             
-  verify-app:
-    docker:
-      - image: cimg/base:2021.04
-    steps:
-      - run:
-         name: install dependencies
-         command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-            aws --version
-            curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.22.6/2022-03-09/bin/linux/amd64/kubectl
-            chmod +x ./kubectl
-            mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
-            kubectl version --short --client
-      - run: 
-         name: check app
-         command: |
-            aws eks update-kubeconfig --name capstone
-            echo '###############'
-            kubectl describe pods
-            echo '###############'
-            kubectl get deployments
-            echo '###############'
-            kubectl get services
-            echo '###############'
-            kubectl describe services/capstone-ee568d0
-            
             
 workflows:
   default:
@@ -187,9 +161,7 @@ workflows:
       - lint-app
       - build-n-push-image:
           requires: [build-app, lint-app]
-    #   - create-eks-cluster:
-    #       requires: [build-n-push-image]
+      - create-eks-cluster:
+          requires: [build-n-push-image]
       - deploy-app-to-cluster:
-    #      requires: [create-eks-cluster]
-           requires: [build-n-push-image]  
-    #  - verify-app
+          requires: [create-eks-cluster]
