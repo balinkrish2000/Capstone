@@ -1,7 +1,7 @@
 version: 2.1
 
 # commands:
-#   destroy-environment:
+#    rollback-deployment:
 #     description: Destroy cloudformation stacks given a workflow ID.
 #     steps:
 #       - run:
@@ -154,6 +154,7 @@ jobs:
             export API_IP=$(sed -e 's/^"//' -e 's/"$//' < ip.txt)
             export API_URL="http://${API_IP}:8000"
             echo "${API_URL}"
+            curl "${API_URL}"
          no_output_timeout: 1m
             
 workflows:
