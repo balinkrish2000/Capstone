@@ -1,7 +1,7 @@
-FROM ubuntu:20.04
+FROM nginx:1.19-alpine
 
 # hadolint ignore=DL3008
-RUN apt-get update && apt-get install -y nginx --no-install-recommends && apt-get clean && rm -rf /var/lib/apt/lists/*
+#RUN apt-get update && apt-get install -y nginx --no-install-recommends && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 COPY /config/nginx.conf /etc/nginx/nginx.conf
