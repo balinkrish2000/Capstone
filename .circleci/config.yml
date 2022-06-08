@@ -10,6 +10,18 @@ commands:
           command: |
             kubectl rollout undo deployments/capstone
       - run:
+         name: check rollback details
+         command: |
+            kubectl get deploy capstone
+            echo '###############'
+            kubectl get rs
+            echo '###############'
+            kubectl get pods
+            echo '###############'
+            kubectl describe pods
+            echo '###############'
+            kubectl describe services/capstone
+      - run:
           name: check rollback status
           when: on_fail
           command: |
@@ -165,7 +177,7 @@ jobs:
             aws eks update-kubeconfig --name capstone
             kubectl get svc capstone -o json | jq .status.loadBalancer.ingress[].hostname >> ip.txt
             export API_IP=$(sed -e 's/^"//' -e 's/"$//' < ip.txt)
-            export API_URL="http://${API_IP}:8000"
+            export API_URL="http://${API_IP}:80"
             echo "${API_URL}"
             curl "${API_URL}"
          no_output_timeout: 15s
@@ -174,10 +186,10 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-app
-      # - lint-app
-      # - build-n-push-image:
-      #    requires: [build-app, lint-app]
-      # - deploy-app-to-cluster:
-      #    requires: [build-n-push-image]
-         - verify-app
+      - build-app
+      - lint-app
+      - build-n-push-image:
+         requires: [build-app, lint-app]
+      - deploy-app-to-cluster:
+         requires: [build-n-push-image]
+      #   - verify-app
