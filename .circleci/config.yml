@@ -137,7 +137,7 @@ jobs:
             echo '###############'
             kubectl get pods
             echo '###############'
-            kubectl expose deployment/capstone --port 8000 --type=LoadBalancer
+            kubectl expose deployment/capstone --port 80 --type=LoadBalancer
       - run:
          name: describe pods
          command: |
