@@ -128,7 +128,7 @@ jobs:
          name: test app using curl
          command: |
             kubectl get svc capstone -o yaml | grep clusterIP >> ip.txt
-            grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' ip.txt
+            grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' ip.txt
             
             
   verify-app:
@@ -163,9 +163,9 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-app
-      - lint-app
+      # - build-app
+      # - lint-app
       - build-n-push-image:
-          requires: [build-app, lint-app]
+      #    requires: [build-app, lint-app]
       - deploy-app-to-cluster:
            requires: [build-n-push-image]
