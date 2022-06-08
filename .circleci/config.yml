@@ -152,9 +152,8 @@ jobs:
             aws eks update-kubeconfig --name capstone
             kubectl get svc capstone -o json | jq .status.loadBalancer.ingress[].hostname >> ip.txt
             export API_IP=$(sed -e 's/^"//' -e 's/"$//' < ip.txt)
-            export API_URL="http://${API_IP}:80"
+            export API_URL="http://${API_IP}:8000"
             echo "${API_URL}"
-            curl "${API_URL}"
             if curl -I -s "${API_URL}" | grep "OK"
             then
                echo "pass"
