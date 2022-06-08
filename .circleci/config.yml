@@ -149,6 +149,7 @@ jobs:
       - run: 
          name: check app
          command: |
+            aws eks update-kubeconfig --name capstone
             kubectl get svc capstone -o yaml | grep clusterIP >> ip.txt
             grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' ip.txt
             export API_IP=$(tail -n 1 ip.txt)
