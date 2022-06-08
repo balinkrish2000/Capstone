@@ -1,13 +1,15 @@
 version: 2.1
 
-# commands:
-#    rollback-deployment:
-#     description: Destroy cloudformation stacks given a workflow ID.
-#     steps:
-#       - run:
-#           name:
-#           when: on_fail
-#           command: |
+commands:
+   rollback-deployment:
+    description: Rollback deployment
+    steps:
+      - run:
+          name:
+          when: on_fail
+          command: |
+            kubectl rollout status deployments/capstone
+            kubectl describe pods
 
 jobs:
   build-app:
