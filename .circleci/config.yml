@@ -151,7 +151,7 @@ jobs:
          command: |
             aws eks update-kubeconfig --name capstone
             kubectl get svc capstone -o json | jq .status.loadBalancer.ingress[].hostname >> ip.txt
-            export API_IP=$(tail -n 1 ip.txt)
+            export API_IP=$(sed -e 's/^"//' -e 's/"$//' < tail -n 1 ip.txt)
             export API_URL="http://${API_IP}:80"
             echo "${API_URL}"
             
