@@ -127,7 +127,9 @@ jobs:
       - run:
          name: test app using curl
          command: |
-            kubectl get svc capstone -o yaml | grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' clusterIP
+            kubectl get svc capstone -o yaml | grep clusterIP >> ip.txt
+            grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' ip.txt
+            
             
   verify-app:
     docker:
