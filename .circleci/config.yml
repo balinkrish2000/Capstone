@@ -8,7 +8,8 @@ commands:
           name:
           when: on_fail
           command: |
-            kubectl rollout status deployments/capstone
+            kubectl rollout undo deployments/capstone
+            echo '###############'
             kubectl describe pods
 
 jobs:
@@ -109,6 +110,8 @@ jobs:
       - run:
          name: check deployment status
          command: |
+            kubectl rollout status deployments/capstone
+            echo '###############'
             kubectl get deploy capstone
             echo '###############'
             kubectl get rs
