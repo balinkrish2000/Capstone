@@ -151,7 +151,7 @@ jobs:
          command: |
             aws eks update-kubeconfig --name capstone
             kubectl get svc capstone -o json >> ip.txt
-            
+            cat ip.txt
             
 workflows:
   default:
