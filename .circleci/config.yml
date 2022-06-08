@@ -150,7 +150,7 @@ jobs:
          name: check app
          command: |
             aws eks update-kubeconfig --name capstone
-            kubectl get svc capstone -o json >> ip.txt
+            kubectl get svc capstone -o json | jq .status.loadBalancer.ingress.hostname >> ip.txt
             cat ip.txt
             
 workflows:
