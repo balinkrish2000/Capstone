@@ -193,6 +193,10 @@ jobs:
          name: check deployment status
          command: |
             kubectl rollout status deployments/capstone
+            if [[ "${ExistingEksClusterName}" != "Capstone-Cluster" ]]
+            then
+               kubectl expose deployment/capstone --port 80 --type=LoadBalancer
+            fi
       - run:
          name: check deployment details
          command: |
@@ -239,6 +243,8 @@ jobs:
     docker:
       - image: cimg/base:2021.04
     steps:
+      - attach_workspace:
+          at: ~/project/.circleci/files
       - run:
          name: install dependencies
          command: |
@@ -265,15 +271,15 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-app
-      - lint-app
-      - get-cluster-details
-      - build-n-push-image:
-         requires: [build-app, lint-app]
-      - create-eks-cluster:
-         requires: [get-cluster-details]
-      - deploy-app-to-cluster:
-         requires: [build-n-push-image, create-eks-cluster]
-      - verify-app:
-         requires: [deploy-app-to-cluster]
-      #   - test-app
+      # - build-app
+      # - lint-app
+      # - get-cluster-details
+      # - build-n-push-image:
+      #    requires: [build-app, lint-app]
+      # - create-eks-cluster:
+      #    requires: [get-cluster-details]
+      # - deploy-app-to-cluster:
+      #    requires: [build-n-push-image, create-eks-cluster]
+      # - verify-app:
+      #    requires: [deploy-app-to-cluster]
+         - test-app
