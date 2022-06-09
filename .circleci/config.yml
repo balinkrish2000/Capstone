@@ -259,7 +259,13 @@ jobs:
       - run: 
          name: check app
          command: |
+            cat ~/project/.circleci/files/eksclustername.txt
+            export EksClusterName=$(tail -n 1 ~/project/.circleci/files/eksclustername.txt)
+            export ExistingEksClusterName="${EksClusterName}"
+            echo ExistingEksClusterName: "${EksClusterName}"
+         
             aws eks update-kubeconfig --name capstone
+            kubectl expose deployment/capstone --port 80 --type=LoadBalancer
             kubectl get svc capstone -o json | jq .status.loadBalancer.ingress[].hostname >> ip.txt
             export API_IP=$(sed -e 's/^"//' -e 's/"$//' < ip.txt)
             export API_URL="http://${API_IP}:80"
@@ -273,7 +279,7 @@ workflows:
     jobs:
       # - build-app
       # - lint-app
-      # - get-cluster-details
+        - get-cluster-details
       # - build-n-push-image:
       #    requires: [build-app, lint-app]
       # - create-eks-cluster:
@@ -282,4 +288,5 @@ workflows:
       #    requires: [build-n-push-image, create-eks-cluster]
       # - verify-app:
       #    requires: [deploy-app-to-cluster]
-         - test-app
+         - test-app:
+            requires: [get-cluster-details]
