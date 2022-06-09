@@ -235,7 +235,7 @@ jobs:
             aws eks update-kubeconfig --name capstone
             kubectl get svc capstone -o json | jq .status.loadBalancer.ingress[].hostname >> ip.txt
             export API_IP=$(sed -e 's/^"//' -e 's/"$//' < ip.txt)
-            export API_URL="http://${API_IP}:8000"
+            export API_URL="http://${API_IP}:80"
             echo "${API_URL}"
             curl "${API_URL}"
          no_output_timeout: 1m
