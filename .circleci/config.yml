@@ -140,10 +140,9 @@ jobs:
          command: |
             cat ~/project/.circleci/files/eksclustername.txt
             export EksClusterName=$(tail -n 1 ~/project/.circleci/files/eksclustername.txt)
-            export ExistingEksClusterName="${EksClusterName}"
-            echo ExistingEksClusterName: "${ExistingEksClusterName}"
+            echo ExistingEksClusterName: "${EksClusterName}"
             
-            if [[ "${ExistingEksClusterName}" != "Capstone-Cluster" ]]
+            if [[ "${EksClusterName}" != "Capstone-Cluster" ]]
             then
                aws cloudformation deploy \
                  --template-file .circleci/files/ekscluster.yml \
@@ -180,7 +179,7 @@ jobs:
          command: |
             cat ~/project/.circleci/files/eksclustername.txt
             export EksClusterName=$(tail -n 1 ~/project/.circleci/files/eksclustername.txt)
-            echo 'export ExistingEksClusterName="${EksClusterName}"' >> $BASH_ENV
+            echo ExistingEksClusterName: "${EksClusterName}"
             
             if [[ "${EksClusterName}" == "Capstone-Cluster" ]]
             then
@@ -192,8 +191,10 @@ jobs:
          name: check deployment status
          command: |
             kubectl rollout status deployments/capstone
-            echo ExistingEksClusterName: "${ExistingEksClusterName}"
-            if [[ "${ExistingEksClusterName}" != "Capstone-Cluster" ]]
+            cat ~/project/.circleci/files/eksclustername.txt
+            export EksClusterName=$(tail -n 1 ~/project/.circleci/files/eksclustername.txt)
+            echo ExistingEksClusterName: "${EksClusterName}"
+            if [[ "${EksClusterName}" != "Capstone-Cluster" ]]
             then
                kubectl expose deployment/capstone --port 80 --type=LoadBalancer
             fi
