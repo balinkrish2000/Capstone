@@ -279,7 +279,7 @@ jobs:
             export API_URL="http://${API_IP}:80"
             echo "${API_URL}"
             curl "${API_URL}"
-         no_output_timeout: 15s
+         no_output_timeout: 1m
       - rollback-deployment
             
 workflows:
