@@ -115,6 +115,7 @@ jobs:
             aws cloudformation \
               list-exports --query "Exports[?Name==\`EksClusterName\`].Value" \
               --no-paginate --output text >> .circleci/files/eksclustername.txt
+            cat .circleci/files/eksclustername.txt
       - persist_to_workspace:
           root: ~/project/.circleci/files
           paths:
@@ -258,10 +259,13 @@ workflows:
     jobs:
       - build-app
       - lint-app
+      - get-cluster-details
       - build-n-push-image:
          requires: [build-app, lint-app]
+      - create-eks-cluster:
+         requires: [get-cluster-details]
       - deploy-app-to-cluster:
-         requires: [build-n-push-image]
+         requires: [build-n-push-image, create-eks-cluster]
       - verify-app:
          requires: [deploy-app-to-cluster]
       #   - test-app
