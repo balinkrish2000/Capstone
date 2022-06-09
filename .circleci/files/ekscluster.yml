@@ -43,8 +43,8 @@ Resources:
         - subnet-012c9754debe69322
 
 Outputs:
-  WorkflowID:
-    Value: !Sub ${WorkflowID}
-    Description: WorkflowID of the stack
+  EksClusterName:
+    Value: Capstone-Cluster
+    Description: Name of the EKS Cluster
     Export:
-      Name: WorkflowID
+      Name: EksClusterName

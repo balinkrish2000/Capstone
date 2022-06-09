@@ -11,6 +11,7 @@ commands:
             kubectl rollout undo deployments/capstone
       - run:
          name: check rollback details
+         when: on_fail
          command: |
             kubectl get deploy capstone
             echo '###############'
@@ -102,11 +103,53 @@ jobs:
             docker login -u balinkrish2000 -p 4e57c8ff-c3df-4820-a380-9d3762b3b433
             docker tag capstone:${CIRCLE_WORKFLOW_ID:0:7} balinkrish2000/capstone:${CIRCLE_WORKFLOW_ID:0:7}
             docker push balinkrish2000/capstone:${CIRCLE_WORKFLOW_ID:0:7}
+   
+  get-cluster-details:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+         name: get cluster name
+         command: |
+            aws cloudformation \
+              list-exports --query "Exports[?Name==\`EksClusterName\`].Value" \
+              --no-paginate --output text >> .circleci/files/eksclustername.txt
+      - persist_to_workspace:
+          root: ~/project/.circleci/files
+          paths:
+            - .
+   
+  create-eks-cluster:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - attach_workspace:
+          at: ~/project/.circleci/files
+      - run:
+         name: create eks cluster
+         command: |
+            cat ~/project/.circleci/files/eksclustername.txt
+            export EksClusterName=$(tail -n 1 ~/project/.circleci/files/eksclustername.txt)
+            export ExistingEksClusterName="${EksClusterName}"
+            echo ExistingEksClusterName: "${EksClusterName}"
+            
+            if [[ "${ExistingEksClusterName}" != "Capstone-Cluster" ]]
+            then
+               aws cloudformation deploy \
+                 --template-file .circleci/files/ekscluster.yml \
+                 --tags project=capstone \
+                 --stack-name "capstone-${CIRCLE_WORKFLOW_ID:0:7}" \
+                 --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
+            fi
+         no_output_timeout: 20m
          
   deploy-app-to-cluster:
     docker:
       - image: cimg/base:2021.04
     steps:
+      - attach_workspace:
+          at: ~/project/.circleci/files
       - run:
          name: install dependencies
          command: |
@@ -122,11 +165,21 @@ jobs:
          name: configure kube
          command: |
             aws eks update-kubeconfig --name capstone
+            kubectl get nodes
       - run:
          name: Deploy App
          command: |
-            kubectl get nodes
-            kubectl set image deployments/capstone capstone=balinkrish2000/capstone:${CIRCLE_WORKFLOW_ID:0:7}
+            cat ~/project/.circleci/files/eksclustername.txt
+            export EksClusterName=$(tail -n 1 ~/project/.circleci/files/eksclustername.txt)
+            export ExistingEksClusterName="${EksClusterName}"
+            echo ExistingEksClusterName: "${EksClusterName}"
+            
+            if [[ "${ExistingEksClusterName}" == "Capstone-Cluster" ]]
+            then
+               kubectl set image deployments/capstone capstone=balinkrish2000/capstone:${CIRCLE_WORKFLOW_ID:0:7}
+            else
+               kubectl create deploy capstone --image=balinkrish2000/capstone:${CIRCLE_WORKFLOW_ID:0:7}
+            fi
       - run:
          name: check deployment status
          command: |
@@ -143,6 +196,23 @@ jobs:
             kubectl describe pods
             echo '###############'
             kubectl describe services/capstone
+      - rollback-deployment
+            
+  verify-app:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - run:
+         name: install dependencies
+         command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+            aws --version
+            curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.22.6/2022-03-09/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+            kubectl version --short --client
       - run: 
          name: check app
          command: |
@@ -154,9 +224,9 @@ jobs:
             curl "${API_URL}"
          no_output_timeout: 15s
       - rollback-deployment
+         
             
-            
-  verify-app:
+  test-app:
     docker:
       - image: cimg/base:2021.04
     steps:
@@ -192,4 +262,6 @@ workflows:
          requires: [build-app, lint-app]
       - deploy-app-to-cluster:
          requires: [build-n-push-image]
-      #   - verify-app
+      - verify-app:
+         requires: [deploy-app-to-cluster]
+      #   - test-app
