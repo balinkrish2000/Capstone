@@ -181,9 +181,8 @@ jobs:
             cat ~/project/.circleci/files/eksclustername.txt
             export EksClusterName=$(tail -n 1 ~/project/.circleci/files/eksclustername.txt)
             echo 'export ExistingEksClusterName="${EksClusterName}"' >> $BASH_ENV
-            echo ExistingEksClusterName: "${ExistingEksClusterName}"
             
-            if [[ "${ExistingEksClusterName}" == "Capstone-Cluster" ]]
+            if [[ "${EksClusterName}" == "Capstone-Cluster" ]]
             then
                kubectl set image deployments/capstone capstone=balinkrish2000/capstone:${CIRCLE_WORKFLOW_ID:0:7}
             else
