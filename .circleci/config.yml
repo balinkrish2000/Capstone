@@ -265,7 +265,15 @@ jobs:
             echo ExistingEksClusterName: "${EksClusterName}"
          
             aws eks update-kubeconfig --name capstone
-            kubectl expose deployment/capstone --port 80 --type=LoadBalancer
+            kubectl get deploy capstone
+            echo '###############'
+            kubectl get rs
+            echo '###############'
+            kubectl get pods
+            echo '###############'
+            kubectl describe pods
+            echo '###############'
+            kubectl describe services/capstone
             kubectl get svc capstone -o json | jq .status.loadBalancer.ingress[].hostname >> ip.txt
             export API_IP=$(sed -e 's/^"//' -e 's/"$//' < ip.txt)
             export API_URL="http://${API_IP}:80"
@@ -277,16 +285,16 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-app
-      # - lint-app
-         - get-cluster-details
-      # - build-n-push-image:
-      #    requires: [build-app, lint-app]
-      # - create-eks-cluster:
-      #    requires: [get-cluster-details]
-      # - deploy-app-to-cluster:
-      #    requires: [build-n-push-image, create-eks-cluster]
-      # - verify-app:
-      #    requires: [deploy-app-to-cluster]
-         - test-app:
-            requires: [get-cluster-details]
+      - build-app
+      - lint-app
+      - get-cluster-details
+      - build-n-push-image:
+         requires: [build-app, lint-app]
+      - create-eks-cluster:
+         requires: [get-cluster-details]
+      - deploy-app-to-cluster:
+         requires: [build-n-push-image, create-eks-cluster]
+      - verify-app:
+         requires: [deploy-app-to-cluster]
+         # - test-app:
+         #    requires: [get-cluster-details]
