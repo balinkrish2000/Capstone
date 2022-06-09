@@ -140,8 +140,8 @@ jobs:
          command: |
             cat ~/project/.circleci/files/eksclustername.txt
             export EksClusterName=$(tail -n 1 ~/project/.circleci/files/eksclustername.txt)
-            echo 'export ExistingEksClusterName="${EksClusterName}"' >> $BASH_ENV
-            echo ExistingEksClusterName: "${EksClusterName}"
+            export ExistingEksClusterName="${EksClusterName}"
+            echo ExistingEksClusterName: "${ExistingEksClusterName}"
             
             if [[ "${ExistingEksClusterName}" != "Capstone-Cluster" ]]
             then
